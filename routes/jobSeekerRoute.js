@@ -12,7 +12,7 @@ const {
   updateSkills,
   noOfApplicants,
   postReview,
-  PostTestimonial,
+  postTestimonial,
 } = require("../controllers/jobController");
 
 const multer = require("multer");
@@ -30,6 +30,6 @@ router.post("/applyjob", applyJob);
 router.post("/postReview", postReview);
 router.post("/updateskills", updateSkills);
 router.post("/noofapplications", noOfApplicants);
-router.post("/testimonial", PostTestimonial);
+router.post("/testimonial", postTestimonial);
 
 module.exports = router;
