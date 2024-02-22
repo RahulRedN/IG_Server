@@ -33,22 +33,22 @@ const companyDetails = async (req, res) => {
 };
 
 const updateJobRequest = async (req, res) => {
-  const { uid, jobseekerId, jobid, action } = req.query;
+  const { appId, action } = req.body;
 
   let application;
 
   if (action === "accept") {
     application = await Application.findOneAndUpdate(
-      { userId: jobseekerId, jobId: jobid },
+      { _id: appId },
       { status: "accepted" }
     );
     const dec = await Job.findOneAndUpdate(
-      { _id: jobid },
+      { _id: application.jobId },
       { $inc: { vacancies: -1 } }
     );
   } else {
     application = await Application.findOneAndUpdate(
-      { userId: jobseekerId, jobId: jobid },
+      { _id: appId },
       { status: "rejected" }
     );
   }
@@ -59,7 +59,7 @@ const updateJobRequest = async (req, res) => {
       .json({ msg: "Application not found!" });
   }
 
-  return res.status(StatusCodes.OK).json({ msg: "Jobseeker accepted!" });
+  return res.status(StatusCodes.OK).json({ msg: "Updated" });
 };
 
 const postJob = async (req, res) => {
@@ -126,7 +126,7 @@ const updateJob = async (req, res) => {
       .json({ msg: "Job update failed!" });
   }
 
-  return res.status(StatusCodes.OK).json({ msg: "Job updated!" });
+  return res.status(StatusCodes.OK).json({ msg: "Job updated!" });
 };
 
 module.exports = { companyDetails, updateJobRequest, postJob, updateJob };
