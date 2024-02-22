@@ -3,7 +3,10 @@ const Company = require("../models/Company");
 const CustomError = require("../errors");
 const { StatusCodes } = require("http-status-codes");
 const Application = require("../models/Application");
+const Testimonial = require('../models/Testimonial')
 const Job = require("../models/Job");
+const mongoose = require("mongoose");
+
 
 const UserDetails = async (req, res) => {
   const { uid } = req.query;
@@ -158,6 +161,38 @@ const postReview = async (req, res) => {
   return res.status(StatusCodes.OK).json({ msg: "Review posted!" });
 };
 
+
+const noOfApplicants = async (req, res) => {
+
+  const { jid } = req.body;
+
+  const jobIDs = Array.isArray(jid) ? jid.map(id => new mongoose.Types.ObjectId(id)) : [];
+
+  // Check if jobIDs array is not empty before proceeding with aggregation
+  if (jobIDs.length > 0) {
+    const applications = await Application.aggregate([
+      { $match: { jobId: { $in: jobIDs } } },
+      { $group: { _id: '$jobId', count: { $sum: 1 } } }
+    ]);
+    return res.status(StatusCodes.OK).json({ applications });
+  }
+}
+
+const Testimonial = async (req, res) => {
+
+  const { uid, message } = req.body;
+
+  const rs = await Testimonial.create({ userId: uid, message });
+
+  if (!rs) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Testimonial failed!" });
+  }
+
+  return res.status(StatusCodes.OK).json({ msg: "Testimonial posted!" });
+
+
+}
+
 module.exports = {
   UserDetails,
   Jobs,
@@ -168,4 +203,6 @@ module.exports = {
   applyJob,
   updateSkills,
   postReview,
+  noOfApplicants,
+  Testimonial,
 };

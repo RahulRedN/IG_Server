@@ -129,4 +129,23 @@ const updateJob = async (req, res) => {
   return res.status(StatusCodes.OK).json({ msg: "Job updated!" });
 };
 
-module.exports = { companyDetails, updateJobRequest, postJob, updateJob };
+const deleteJob = async (req, res) => {
+
+
+  const { uid, jobid } = req.query;
+
+  const company = await Company.findOne({ _id: uid });
+
+  if (!company) {
+    return res.status(StatusCodes.NOT_FOUND).json({ msg: "Company not found!" });
+  }
+
+  const job = await Job.findOneAndDelete({ _id: jobid });
+
+  if (!job) {
+    return res.status(StatusCodes.NOT_FOUND).json({ msg: "Job not found!" });
+  }
+
+}
+
+module.exports = { companyDetails, updateJobRequest, postJob, updateJob, deleteJob };
