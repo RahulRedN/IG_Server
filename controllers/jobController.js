@@ -3,6 +3,7 @@ const Company = require("../models/Company");
 const CustomError = require("../errors");
 const { StatusCodes } = require("http-status-codes");
 const Application = require("../models/Application");
+const Testimonial = require('../models/Testimonial')
 const Job = require("../models/Job");
 const mongoose = require("mongoose");
 
@@ -177,6 +178,21 @@ const noOfApplicants = async (req, res) => {
   }
 }
 
+const Testimonial = async (req, res) => {
+
+  const { uid, message } = req.body;
+
+  const rs = await Testimonial.create({ userId: uid, message });
+
+  if (!rs) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Testimonial failed!" });
+  }
+
+  return res.status(StatusCodes.OK).json({ msg: "Testimonial posted!" });
+
+
+}
+
 module.exports = {
   UserDetails,
   Jobs,
@@ -188,4 +204,5 @@ module.exports = {
   updateSkills,
   postReview,
   noOfApplicants,
+  Testimonial,
 };

@@ -10,11 +10,16 @@ const TestimonialSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Jobseeker",
             required: true,
+        },
+        fav: {
+            type: Boolean,
+            required: true,
+            default: false,
         }
     },
     { timeStamps: true }
 );
 
-QuerySchema.set("timestamps", true);
+TestimonialSchema.set("timestamps", true);
 
 module.exports = mongoose.model("Testimonial", TestimonialSchema);
