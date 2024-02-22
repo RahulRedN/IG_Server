@@ -31,6 +31,8 @@ const Jobs = async (req, res) => {
 const setFavJobs = async (req, res) => {
   const { uid, jid } = req.query;
 
+  console.log(req);
+
   console.log(uid, jid);
 
   const user = await Jobseeker.findOneAndUpdate(
@@ -182,7 +184,9 @@ const postTestimonial = async (req, res) => {
 
   const { uid, message } = req.body;
 
-  const rs = await Testimonial.create({ userId: uid, message });
+  const userPhoto = await Jobseeker.findOne({ _id: uid });
+
+  const rs = await Testimonial.create({ userId: uid, message, imageurl: userPhoto.img });
 
   if (!rs) {
     return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Testimonial failed!" });

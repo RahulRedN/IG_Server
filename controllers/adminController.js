@@ -2,7 +2,8 @@ const { StatusCodes } = require("http-status-codes");
 const Jobseeker = require("../models/Jobseeker");
 const Company = require("../models/Company");
 const Application = require("../models/Application");
-const { Testimonial } = require("./jobController");
+const Testimonial = require("../models/Testimonial");
+
 
 const getAllJobseekers = async (req, res) => {
 
@@ -12,7 +13,7 @@ const getAllJobseekers = async (req, res) => {
         return res.status(StatusCodes.NOT_FOUND).json({ msg: "No jobseekers found" });
     }
 
-    return res.status(StatusCodes.OK).json({ jobseekers });
+    return res.status(StatusCodes.OK).json(jobseekers);
 };
 
 
@@ -40,7 +41,9 @@ const getrecentUsersStats = async (req, res) => {
 
     const incomingReq = await Company.find({ status: "pending" }).countDocuments();
 
-    return res.status(StatusCodes.OK).json({ recentusers: recentusers, recentcompanies: recentcompanies, USR: userCount, CCR: companyCount, ICR: incomingReq });
+    const reviews = await Testimonial.countDocuments();
+
+    return res.status(StatusCodes.OK).json({ recentusers: recentusers, recentcompanies: recentcompanies, USR: userCount, CCR: companyCount, ICR: incomingReq, RCR: reviews });
 }
 
 const getTestimonials = async (req, res) => {
@@ -93,4 +96,4 @@ const getQueries = async (req, res) => {
 
 
 
-module.exports = { getAllJobseekers, getAllCompanies, getrecentUsersStats, getTestimonials, getQueries, deleteTestimonial,bookmarkUpdate };
+module.exports = { getAllJobseekers, getAllCompanies, getrecentUsersStats, getTestimonials, getQueries, deleteTestimonial, bookmarkUpdate };
