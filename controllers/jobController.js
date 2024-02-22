@@ -178,7 +178,7 @@ const noOfApplicants = async (req, res) => {
   }
 }
 
-const Testimonial = async (req, res) => {
+const postTestimonial = async (req, res) => {
 
   const { uid, message } = req.body;
 
@@ -204,5 +204,5 @@ module.exports = {
   updateSkills,
   postReview,
   noOfApplicants,
-  Testimonial,
+  postTestimonial,
 };
