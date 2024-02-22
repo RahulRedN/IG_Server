@@ -11,7 +11,8 @@ const {
   applyJob,
   updateSkills,
   noOfApplicants,
-  Testimonial,
+  postReview,
+  PostTestimonial,
 } = require("../controllers/jobController");
 
 const multer = require("multer");
@@ -26,8 +27,9 @@ router.post("/updatedetails", updateDetails);
 router.post("/updatephoto", upload.single("image"), catchAsync(updatephoto));
 router.get("/jobs", Jobs);
 router.post("/applyjob", applyJob);
+router.post("/postReview", postReview);
 router.post("/updateskills", updateSkills);
-router.get('/noofapplications', noOfApplicants)
-router.post('/testimonial',Testimonial);
+router.post("/noofapplications", noOfApplicants);
+router.post("/testimonial", PostTestimonial);
 
 module.exports = router;
