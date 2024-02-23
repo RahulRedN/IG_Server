@@ -105,12 +105,14 @@ const bookmarkUpdate = async (req, res) => {
 }
 
 const deleteUser = async (req, res) => {
-    const { uid } = req.query;
+    const { uid } = req.body;
     const user = await Jobseeker.findByIdAndDelete({ _id: uid });
 
     if (!user) {
         return res.status(StatusCodes.NOT_FOUND).json({ msg: "User not found" })
     }
+
+    const applications = await Application.deleteMany({ userId: uid });
 
     return res.status(StatusCodes.OK).json({ msg: "User deleted" })
 }
@@ -122,6 +124,10 @@ const deleteCompany = async (req, res) => {
     if (!company) {
         return res.status(StatusCodes.NOT_FOUND).json({ msg: "Company not found" })
     }
+
+    const jobs = await Job.deleteMany({ companyId: uid });
+
+    const applications = await Application.deleteMany({ jobId: { $in: jobIds } });
 
     return res.status(StatusCodes.OK).json({ msg: "Company deleted" })
 }
@@ -151,4 +157,4 @@ const getQueries = async (req, res) => {
 
 
 
-module.exports = { getAllJobseekers, getAllCompanies, getrecentUsersStats, getTestimonials, getQueries, deleteTestimonial, bookmarkUpdate,deleteUser,deleteCompany,updateCompany };
+module.exports = { getAllJobseekers, getAllCompanies, getrecentUsersStats, getTestimonials, getQueries, deleteTestimonial, bookmarkUpdate, deleteUser, deleteCompany, updateCompany };
