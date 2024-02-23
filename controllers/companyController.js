@@ -33,22 +33,22 @@ const companyDetails = async (req, res) => {
 };
 
 const updateJobRequest = async (req, res) => {
-  const { uid, jobseekerId, jobid, action } = req.query;
+  const { appId, action } = req.body;
 
   let application;
 
   if (action === "accept") {
     application = await Application.findOneAndUpdate(
-      { userId: jobseekerId, jobId: jobid },
+      { _id: appId },
       { status: "accepted" }
     );
     const dec = await Job.findOneAndUpdate(
-      { _id: jobid },
+      { _id: application.jobId },
       { $inc: { vacancies: -1 } }
     );
   } else {
     application = await Application.findOneAndUpdate(
-      { userId: jobseekerId, jobId: jobid },
+      { _id: appId },
       { status: "rejected" }
     );
   }
@@ -59,13 +59,14 @@ const updateJobRequest = async (req, res) => {
       .json({ msg: "Application not found!" });
   }
 
-  return res.status(StatusCodes.OK).json({ msg: "Jobseeker accepted!" });
+  return res.status(StatusCodes.OK).json({ msg: "Updated" });
 };
 
 const postJob = async (req, res) => {
   const {
-    uid,
+    companyId,
     responsibilities,
+    companyName,
     skills,
     benefits,
     experience,
@@ -78,11 +79,9 @@ const postJob = async (req, res) => {
     joiningDate,
   } = req.body;
 
-  const company = await Company.findOne({ _id: uid });
-
   const job = await Job.create({
-    companyId: uid,
-    companyName: company.name,
+    companyId: companyId,
+    companyName: companyName,
     responsibilities,
     skills,
     benefits,
@@ -102,15 +101,17 @@ const postJob = async (req, res) => {
       .json({ msg: "Job posting failed!" });
   }
 
-  return res.status(StatusCodes.OK).json({ msg: "Job posted!" });
+  return res
+    .status(StatusCodes.OK)
+    .json({ msg: "Job posted!", jobId: job._id });
 };
 
 const updateJob = async (req, res) => {
-  const { uid, experience, salary, position, totalPositions, joiningDate } =
+  const { jobId, experience, salary, position, totalPositions, joiningDate } =
     req.body;
 
   const job = await Job.findOneAndUpdate(
-    { companyId: uid },
+    { _id: jobId },
     {
       experience,
       salary,
@@ -126,21 +127,21 @@ const updateJob = async (req, res) => {
       .json({ msg: "Job update failed!" });
   }
 
-  return res.status(StatusCodes.OK).json({ msg: "Job updated!" });
+  return res.status(StatusCodes.OK).json({ msg: "Job updated!" });
 };
 
 const deleteJob = async (req, res) => {
-
-
-  const { uid, jobid } = req.query;
+  const { uid, jobId } = req.body;
 
   const company = await Company.findOne({ _id: uid });
 
   if (!company) {
-    return res.status(StatusCodes.NOT_FOUND).json({ msg: "Company not found!" });
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ msg: "Company not found!" });
   }
 
-  const job = await Job.findOneAndDelete({ _id: jobid });
+  const job = await Job.findOneAndDelete({ _id: jobId });
 
   if (!job) {
     return res.status(StatusCodes.NOT_FOUND).json({ msg: "Job not found!" });
@@ -153,7 +154,12 @@ const deleteJob = async (req, res) => {
   }
 
   return res.status(StatusCodes.OK).json({ msg: "Job deleted!" });
+};
 
-}
-
-module.exports = { companyDetails, updateJobRequest, postJob, updateJob, deleteJob };
+module.exports = {
+  companyDetails,
+  updateJobRequest,
+  postJob,
+  updateJob,
+  deleteJob,
+};

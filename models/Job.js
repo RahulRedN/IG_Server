@@ -55,11 +55,6 @@ const JobSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    status: {
-      type: String,
-      enum: ["pending", "failed", "paid", "delivered", "canceled"],
-      default: "pending",
-    },
   },
   { timeStamps: true }
 );

@@ -11,6 +11,7 @@ const {
   applyJob,
   updateSkills,
   noOfApplicants,
+  postReview,
   postTestimonial,
 } = require("../controllers/jobController");
 
@@ -26,8 +27,9 @@ router.post("/updatedetails", updateDetails);
 router.post("/updatephoto", upload.single("image"), catchAsync(updatephoto));
 router.get("/jobs", Jobs);
 router.post("/applyjob", applyJob);
+router.post("/postReview", postReview);
 router.post("/updateskills", updateSkills);
-router.get('/noofapplications', noOfApplicants)
-router.post('/testimonial',postTestimonial);
+router.post("/noofapplications", noOfApplicants);
+router.post("/testimonial", postTestimonial);
 
 module.exports = router;
