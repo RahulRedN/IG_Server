@@ -1,10 +1,11 @@
 const express = require("express");
-const { getrecentUsersStats, getAllJobseekers, getAllCompanies, getTestimonials, getQueries, deleteTestimonial, bookmarkUpdate, deleteUser, deleteCompany, updateCompany } = require("../controllers/adminController");
+const { getrecentUsersStats, getAllJobseekers, getAllCompanies, getTestimonials, getQueries, deleteTestimonial, bookmarkUpdate, deleteUser, deleteCompany, updateCompany, getpendingCompanies } = require("../controllers/adminController");
 const router = express.Router();
 
 router.get("/homestats", getrecentUsersStats);
 router.get('/getalljobseekers', getAllJobseekers);
 router.get('/getallcompanies', getAllCompanies);
+router.get("/pendingCompanies", getpendingCompanies)
 router.get('/getalltestimonials', getTestimonials);
 router.get('/getqueries', getQueries);
 
