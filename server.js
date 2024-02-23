@@ -33,46 +33,21 @@ const accesslogStream = rfs.createStream("access.log", {
 
 app.use(morgan("combined", { stream: accesslogStream }));
 
-//app middleware
+//application middleware
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
+
+//Inbuilt middleware
 app.use(express.static("./public"));
-
-
 
 
 app.use("/api/auth", authRouter);
 app.use("/api/jobseeker", jobseekerRouter);
 app.use("/api/company", companyRouter);
 app.use('/api/admin', adminRouter);
-
-app.get('/test', async (req, res) => {
-
-  try {
-    const data = Company.find({ email: "email@gmail.com" });
-    console.log("Created At:", data.createdAt);
-    console.log("Updated At:", data.updatedAt);
-    res.json({ data });
-
-  } catch (error) {
-
-  }
-
-})
-
-app.get("/test", async (req, res) => {
-  try {
-    const data = await Company.find({});
-    res.json(data);
-    console.log(data[0]);
-  } catch (error) {
-    console.log(error);
-  }
-});
-
 
 const port = process.env.PORT || 8080;
 const start = async () => {
@@ -86,5 +61,20 @@ const start = async () => {
     console.log(error);
   }
 };
+
+//Error middleware
+router.use((err, req, res, next) => {
+  console.log("Error handling middleware called");
+  console.log("Path", req.path);
+  console.error("Error", err);
+
+  if (err.type === "redirect") {
+    res.redirect("/error");
+  } else if (err.type === "time-out") {
+    res.status(408).send(err);
+  } else res.status(500).send(err);
+  next();
+});
+
 
 start();
