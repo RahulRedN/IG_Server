@@ -3,6 +3,7 @@ const Jobseeker = require("../models/Jobseeker");
 const Company = require("../models/Company");
 const Application = require("../models/Application");
 const Testimonial = require("../models/Testimonial");
+const Job = require("../models/Job");
 
 
 const getAllJobseekers = async (req, res) => {
@@ -25,8 +26,27 @@ const getAllCompanies = async (req, res) => {
     if (!companies) {
         return res.status(StatusCodes.NOT_FOUND).json({ msg: "No non-pending companies found" });
     }
+    let jobsPosted = [];
+    let applications = [];
 
-    return res.status(StatusCodes.OK).json({ companies });
+
+    const details = async () => {
+        companies.forEach(async (company) => {
+
+            const jobs = await Job.find({ companyId: company._id });
+
+            jobsPosted = [...jobsPosted, jobs.length]
+
+            const app = await Application.find({ jobId: { $in: jobs } }).countDocuments();
+            applications.push(app.length);
+        })
+
+        console.log(jobsPosted, applications);
+    }
+
+    details();
+
+    return res.status(StatusCodes.OK).json({ companies, jobsPosted, applications });
 }
 
 const getrecentUsersStats = async (req, res) => {
@@ -82,11 +102,46 @@ const bookmarkUpdate = async (req, res) => {
 
     return res.status(StatusCodes.OK).json({ msg: "Testimonial updated" })
 
-
-
 }
 
+const deleteUser = async (req, res) => {
+    const { uid } = req.query;
+    const user = await Jobseeker.findByIdAndDelete({ _id: uid });
+
+    if (!user) {
+        return res.status(StatusCodes.NOT_FOUND).json({ msg: "User not found" })
+    }
+
+    return res.status(StatusCodes.OK).json({ msg: "User deleted" })
+}
+
+const deleteCompany = async (req, res) => {
+    const { uid } = req.query;
+    const company = await Company.findByIdAndDelete({ _id: uid });
+
+    if (!company) {
+        return res.status(StatusCodes.NOT_FOUND).json({ msg: "Company not found" })
+    }
+
+    return res.status(StatusCodes.OK).json({ msg: "Company deleted" })
+}
+
+const updateCompany = async (req, res) => {
+
+    const { uid, status } = req.body;
+
+    const company = await Company.findOneAndUpdate({ _id: uid }, { $set: { status: status } });
+
+    if (!company) {
+        return res.status(StatusCodes.NOT_FOUND).json({ msg: "Company not found" })
+    }
+
+    return res.status(StatusCodes.OK).json({ msg: "Company updated" })
+}
+
+
 const getQueries = async (req, res) => {
+
     const queries = await Query.find({})
     if (!queries) {
         return res.status(StatusCodes.NOT_FOUND).json({ msg: "No queries found" })
@@ -96,4 +151,4 @@ const getQueries = async (req, res) => {
 
 
 
-module.exports = { getAllJobseekers, getAllCompanies, getrecentUsersStats, getTestimonials, getQueries, deleteTestimonial, bookmarkUpdate };
+module.exports = { getAllJobseekers, getAllCompanies, getrecentUsersStats, getTestimonials, getQueries, deleteTestimonial, bookmarkUpdate,deleteUser,deleteCompany,updateCompany };

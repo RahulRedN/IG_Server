@@ -1,5 +1,5 @@
 const express = require("express");
-const { getrecentUsersStats, getAllJobseekers, getAllCompanies, getTestimonials, getQueries, deleteTestimonial, bookmarkUpdate } = require("../controllers/adminController");
+const { getrecentUsersStats, getAllJobseekers, getAllCompanies, getTestimonials, getQueries, deleteTestimonial, bookmarkUpdate, deleteUser, deleteCompany, updateCompany } = require("../controllers/adminController");
 const router = express.Router();
 
 router.get("/homestats", getrecentUsersStats);
@@ -10,6 +10,9 @@ router.get('/getqueries', getQueries);
 
 router.post('/deleteTestimonial', deleteTestimonial);
 router.post('/bookmarkupdate', bookmarkUpdate)
+router.post('/deleteUser', deleteUser)
+router.post('/deleteCompany', deleteCompany)
+router.post('/updateCompany', updateCompany)
 
 
 
