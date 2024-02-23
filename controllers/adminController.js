@@ -49,6 +49,18 @@ const getAllCompanies = async (req, res) => {
     return res.status(StatusCodes.OK).json({ companies, jobsPosted, applications });
 }
 
+const getpendingCompanies = async (req, res) => {
+
+    //status having pending are not needed
+    const companies = await Company.find({ status: "pending" })
+
+    if (!companies) {
+        return res.status(StatusCodes.NOT_FOUND).json({ msg: "No non-pending companies found" });
+    }
+
+    return res.status(StatusCodes.OK).json({ companies });
+}
+
 const getrecentUsersStats = async (req, res) => {
 
     const recentusers = await Jobseeker.find({}).sort({ createdAt: -1 }).limit(5);
