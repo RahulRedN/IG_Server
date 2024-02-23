@@ -157,3 +157,5 @@
 ::1 - - [22/Feb/2024:17:39:44 +0000] "OPTIONS /api/auth/loginCompany HTTP/1.1" 204 0 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
 ::1 - - [22/Feb/2024:17:39:44 +0000] "POST /api/auth/loginCompany HTTP/1.1" 200 312 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
 ::1 - - [22/Feb/2024:17:39:45 +0000] "GET /api/company/user?uid=65d5eb85f142aec9b20c2785 HTTP/1.1" 200 11301 "http://localhost:5173/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+::1 - - [22/Feb/2024:18:36:56 +0000] "GET / HTTP/1.1" 404 139 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+::1 - - [22/Feb/2024:18:38:22 +0000] "GET /test HTTP/1.1" - - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
