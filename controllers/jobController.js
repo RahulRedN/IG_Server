@@ -186,7 +186,7 @@ const postTestimonial = async (req, res) => {
 
   const userPhoto = await Jobseeker.findOne({ _id: uid });
 
-  const rs = await Testimonial.create({ userId: uid, message, imageurl: userPhoto.img });
+  const rs = await Testimonial.create({ userId: uid, message,name: userPhoto.fname, imageurl: userPhoto.img });
 
   if (!rs) {
     return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Testimonial failed!" });
