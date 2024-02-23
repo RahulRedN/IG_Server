@@ -100,6 +100,32 @@ const loginJobseeker = async (req, res) => {
 
 }
 
+
+const loginAdmin = async (req, res) => {
+  const { email, password } = req.body;
+  console.log(email, password);
+  if (!email || !password) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Please provide email and password!" });
+  }
+  if (!(email === "Admin@gmail.com") || !(password === "Admin@2021")) {
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ msg: "You are not authorized" });
+  }
+  const tokenAdmin = createTokenUser({
+    name: email,
+    _id: password,
+    role: "Admin",
+  });
+
+  const cook = attachCookiesToResponse({ res, user: tokenAdmin });
+  return res
+    .status(StatusCodes.OK)
+    .json({ Admin: tokenAdmin, cookie: cook });
+};
+
 const logout = async (req, res) => {
   res.cookie("token", "logout", {
     httpOnly: true,
@@ -108,4 +134,4 @@ const logout = async (req, res) => {
   return res.status(StatusCodes.OK).json({ msg: "Logged out!!" });
 };
 
-module.exports = { registerJobseeker, registerCompany, loginJobseeker, loginCompany, logout };
+module.exports = { registerJobseeker, registerCompany, loginJobseeker, loginCompany, logout,loginAdmin };

@@ -147,7 +147,7 @@ const deleteJob = async (req, res) => {
     return res.status(StatusCodes.NOT_FOUND).json({ msg: "Job not found!" });
   }
 
-  const application = await Application.deleteMany({ _id: jobid });
+  const application = await Application.deleteMany({ _id: jobId });
 
   if (!application) {
     return res.status(StatusCodes.NOT_FOUND).json({ msg: "Applications not found!" });

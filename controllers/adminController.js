@@ -40,8 +40,6 @@ const getAllCompanies = async (req, res) => {
       }).countDocuments();
       applications.push(app.length);
     });
-
-    console.log(jobsPosted, applications);
   };
 
   details();
@@ -151,9 +149,8 @@ const deleteUser = async (req, res) => {
 };
 
 const deleteCompany = async (req, res) => {
-  const { uid } = req.query;
-  const jobs = await Job.deleteMany({ companyId: uid });
-  const applications = await Application.deleteMany({ jobId: { $in: jobIds } });
+  const { uid } = req.body;
+  
   const company = await Company.findByIdAndDelete({ _id: uid });
 
   if (!company) {
