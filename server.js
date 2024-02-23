@@ -17,6 +17,7 @@ const connectDB = require("./db/connect");
 const authRouter = require("./routes/authRoute");
 const jobseekerRouter = require("./routes/jobSeekerRoute");
 const companyRouter = require("./routes/companyRoute");
+const adminRouter = require("./routes/adminRoute");
 
 
 const corsOptions = {
@@ -46,6 +47,7 @@ app.use(express.static("./public"));
 app.use("/api/auth", authRouter);
 app.use("/api/jobseeker", jobseekerRouter);
 app.use("/api/company", companyRouter);
+app.use('/api/admin', adminRouter);
 
 app.get('/test', async (req, res) => {
 
