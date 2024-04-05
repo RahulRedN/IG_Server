@@ -10,6 +10,8 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const rfs = require("rotating-file-stream");
 
+const router = express.Router();
+
 
 
 const connectDB = require("./db/connect");
@@ -32,6 +34,7 @@ const accesslogStream = rfs.createStream("access.log", {
 });
 
 app.use(morgan("combined", { stream: accesslogStream }));
+
 
 //application middleware
 app.use(cors(corsOptions));
