@@ -6,10 +6,14 @@ const {
   updateJob,
   deleteJob,
 } = require("../controllers/companyController");
+const { isCompany } = require("../middleware/Validators");
+const auth = require("../middleware/AuthenticationMiddleware");
 const router = express.Router();
 
 
 
+
+router.use(auth, isCompany);
 /**
  * @swagger
  * /api/company/user:

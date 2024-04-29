@@ -1,7 +1,21 @@
 const express = require("express");
-const { getrecentUsersStats, getAllJobseekers, getAllCompanies, getTestimonials, getQueries, deleteTestimonial, bookmarkUpdate, deleteUser, deleteCompany, updateCompany, getpendingCompanies } = require("../controllers/adminController");
+const {
+  getrecentUsersStats,
+  getAllJobseekers,
+  getAllCompanies,
+  getTestimonials,
+  getQueries,
+  deleteTestimonial,
+  bookmarkUpdate,
+  deleteUser,
+  deleteCompany,
+  updateCompany,
+  getpendingCompanies,
+} = require("../controllers/adminController");
+const auth = require("../middleware/AuthenticationMiddleware");
+const { isAdmin } = require("../middleware/Validators");
 const router = express.Router();
-
+router.use(auth, isAdmin);
 /**
  * @swagger
  * tags:
@@ -277,7 +291,5 @@ router.delete('/deleteCompany', deleteCompany)
  *         description: Company not found
  */
 router.put('/updateCompany', updateCompany)
-
-
 
 module.exports = router;
