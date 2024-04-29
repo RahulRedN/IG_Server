@@ -52,7 +52,7 @@ app.use((err, req, res, next) => {
   console.error("Error", err);
 
   if (err.type === "redirect") {
-    res.redirect("/error");
+    // res.redirect("/error");
   } else if (err.type === "time-out") {
     res.status(408).send(err);
   } else res.status(500).send(err);
@@ -73,3 +73,65 @@ const start = async () => {
 };
 
 start();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const fileStorageEngine = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "./images");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(false, Date.now() + "--" + file.originalname);
+//   },
+// });
+
+// var accessLogStream = rfs.createStream("S20210010167.log", {
+//   interval: "1h",
+//   path: path.join(__dirname, "log"),
+// });
+
+// const upload = multer({ storage: fileStorageEngine });
+
+// app.use(morgan("combined", { stream: accessLogStream }));

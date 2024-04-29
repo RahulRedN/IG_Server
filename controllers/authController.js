@@ -103,7 +103,6 @@ const loginJobseeker = async (req, res) => {
 
 const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
   if (!email || !password) {
     return res
       .status(StatusCodes.BAD_REQUEST)
