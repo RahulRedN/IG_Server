@@ -96,6 +96,7 @@ const loginJobseeker = async (req, res) => {
   });
 
   const cook = attachCookiesToResponse({ res, user: tokenJobseeker });
+  
   return res.status(StatusCodes.OK).json({ Jobseeker: tokenJobseeker, cookie: cook });
 
 }
