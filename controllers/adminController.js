@@ -18,36 +18,45 @@ const getAllJobseekers = async (req, res) => {
 };
 
 const getAllCompanies = async (req, res) => {
-  //status having pending are not needed
-  const companies = await Company.find({ status: { $ne: "pending" } });
+  try {
+    // Find non-pending companies
+    const companies = await Company.find({ status: { $ne: "pending" } });
 
-  if (!companies) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .json({ msg: "No non-pending companies found" });
-  }
-  let jobsPosted = [];
-  let applications = [];
+    if (!companies || companies.length === 0) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ msg: "No non-pending companies found" });
+    }
 
-  const details = async () => {
-    companies.forEach(async (company) => {
+    let jobsPosted = [];
+    let applications = [];
+
+    // Fetch job details for each company
+    await Promise.all(companies.map(async (company) => {
+      // Find jobs for the company
       const jobs = await Job.find({ companyId: company._id });
 
-      jobsPosted = [...jobsPosted, jobs.length];
+      jobsPosted.push(jobs.length);
 
-      const app = await Application.find({
-        jobId: { $in: jobs },
+      // Count applications for each job
+      const appCount = await Application.find({
+        jobId: { $in: jobs.map(job => job._id) }
       }).countDocuments();
-      applications.push(app.length);
-    });
-  };
 
-  details();
+      applications.push(appCount);
+    }));
 
-  return res
-    .status(StatusCodes.OK)
-    .json({ companies, jobsPosted, applications });
+    return res
+      .status(StatusCodes.OK)
+      .json({ companies, jobsPosted, applications });
+  } catch (error) {
+    console.error("Error in getAllCompanies:", error);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ msg: "Internal server error" });
+  }
 };
+
 
 const getpendingCompanies = async (req, res) => {
   //status having pending are not needed
@@ -116,6 +125,7 @@ const bookmarkUpdate = async (req, res) => {
   let testimonial;
 
   if (action === "true") {
+    console.log("TRUEEE")
     testimonial = await Testimonial.findOneAndUpdate(
       { _id: tid },
       { $set: { bookmarked: true } }
@@ -156,9 +166,6 @@ const deleteCompany = async (req, res) => {
   if (!company) {
     return res.status(StatusCodes.NOT_FOUND).json({ msg: "Company not found" });
   }
-
-
-
   return res.status(StatusCodes.OK).json({ msg: "Company deleted" });
 };
 
@@ -179,11 +186,12 @@ const updateCompany = async (req, res) => {
 
 const getQueries = async (req, res) => {
   const queries = await Query.find({});
-  if (!queries) {
+  if (queries.length === 0) {
     return res.status(StatusCodes.NOT_FOUND).json({ msg: "No queries found" });
   }
   return res.status(StatusCodes.OK).json({ queries });
 };
+
 
 module.exports = {
   getAllJobseekers,
