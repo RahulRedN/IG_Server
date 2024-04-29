@@ -20,8 +20,6 @@ const upload = multer({ storage })
 
 router.post("/registerCompany", registerCompany);
 router.post("/registerJobseeker", upload.single("image"), catchAsync(registerJobseeker));
-
-
 router.post("/loginCompany", loginCompany);
 router.post("/loginJobseeker", loginJobseeker);
 router.post('/loginAdmin', loginAdmin);

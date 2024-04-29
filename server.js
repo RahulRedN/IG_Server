@@ -80,4 +80,30 @@ router.use((err, req, res, next) => {
 });
 
 
+// ----------------------------------------------------------------------------------------------------
+//                  SWAGGER
+const swaggerJSDoc = require('swagger-jsdoc')
+const swaggerUI = require('swagger-ui-express')
+
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'INSPIRING GO API TESTING SITE',
+      version: "1.0.0",
+      description: "A simple Express API to perform CRUD operations"
+    },
+    servers: [
+      {
+        url: "http://localhost:8080"
+      }
+    ]
+  },
+  apis: ['./routes/*.js','./server.js']
+}
+
+const swaggerspec = swaggerJSDoc(options)
+app.use('/api-docs',swaggerUI.serve, swaggerUI.setup(swaggerspec))
+// ----------------------------------------------------------------------------------------------------
+
 start();
