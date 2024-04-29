@@ -1,12 +1,9 @@
-const isJobSeeker = () => {
-    return async (req, res, next) => {
-        console.log(req.user)
-        if (req.user.role === "jobSeeker" || req.user.role === "admin") {
+const isJobSeeker = (req, res, next) => {
+    console.log(req.user)
+    if (req.user.role === "jobseeker" || req.user.role === "admin") {
         next();
-        } else {
+    } else {
         return res.status(401).json({ message: "Unauthorized" });
-        }
-    };
-}
-
+    }
+};
 module.exports = isJobSeeker;

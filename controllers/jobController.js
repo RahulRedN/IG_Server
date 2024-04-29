@@ -12,7 +12,7 @@ const { helper } = require("../redis/helper");
 const UserDetails = async (req, res) => {
   const { uid } = req.query;
 
-  const user = await Jobseetker.findOne({ _id: uid });
+  const user = await Jobseeker.findOne({ _id: uid });
 
   if (!user) {
     return res.status(StatusCodes.NOT_FOUND).json({ msg: "User not found!" });
