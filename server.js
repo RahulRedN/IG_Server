@@ -28,6 +28,9 @@ const corsOptions = {
   credentials: true,
 };
 
+
+
+
 const accesslogStream = rfs.createStream("access.log", {
   interval: "1d",
   path: "./logs",
@@ -70,7 +73,7 @@ router.use((err, req, res, next) => {
   console.log("Error handling middleware called");
   console.log("Path", req.path);
   console.error("Error", err);
-
+  
   if (err.type === "redirect") {
     res.redirect("/error");
   } else if (err.type === "time-out") {
@@ -80,4 +83,38 @@ router.use((err, req, res, next) => {
 });
 
 
+// ----------------------------------------------------------------------------------------------------
+//            SWAGGER
+const swaggerJSDoc = require('swagger-jsdoc')
+const swaggerUI = require('swagger-ui-express')
+
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'INSPIRING GO API TESTING SITE',
+      version: "1.0.0",
+      description: "A simple Express API to perform CRUD operations"
+    },
+    servers: [
+      {
+        url: "http://localhost:8080"
+      }
+    ], 
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+  },
+  apis: ['./routes/*.js','./server.js']
+}
+
+const swaggerspec = swaggerJSDoc(options)
+app.use('/api-docs',swaggerUI.serve, swaggerUI.setup(swaggerspec))
+// ----------------------------------------------------------------------------------------------------
 start();

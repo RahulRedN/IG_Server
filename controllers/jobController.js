@@ -150,7 +150,7 @@ const updateSkills = async (req, res) => {
 
 const postReview = async (req, res) => {
   const { uid, aid, type, rating, feedback } = req.body;
-
+  console.log(req.body)
   const application = await Application.findOneAndUpdate(
     { _id: aid, userId: uid, status: "accepted" },
     { review: { type, rating, feedback, reviewed: true } }
