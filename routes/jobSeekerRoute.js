@@ -18,7 +18,7 @@ const {
 const multer = require("multer");
 const { storage } = require("../cloudinary");
 const auth = require("../middleware/AuthenticationMiddleware");
-const isJobSeeker = require("../middleware/JobSeekerValidator");
+const {isJobSeeker} = require("../middleware/Validators");
 const upload = multer({ storage });
 
 router.use(auth,isJobSeeker);
