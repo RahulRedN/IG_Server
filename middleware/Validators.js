@@ -14,4 +14,12 @@ const isCompany = async (req, res, next) => {
   }
 };
 
-module.exports = { isJobSeeker, isCompany };
+const isAdmin = async (req, res, next) => {
+  if (req.user.role === "admin") {
+    next();
+  } else {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+};
+
+module.exports = { isJobSeeker, isCompany, isAdmin };
