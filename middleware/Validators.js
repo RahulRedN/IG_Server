@@ -1,5 +1,5 @@
 const isJobSeeker = async (req, res, next) => {
-  if (req.user.role === "jobseeker" || req.user.role === "admin") {
+  if (req.user.role === "jobseeker" || req.user.role === "Admin") {
     next();
   } else {
     return res.status(401).json({ message: "Unauthorized" });
@@ -7,7 +7,7 @@ const isJobSeeker = async (req, res, next) => {
 };
 
 const isCompany = async (req, res, next) => {
-  if (req.user.role === "company" || req.user.role === "admin") {
+  if (req.user.role === "company" || req.user.role === "Admin") {
     next();
   } else {
     return res.status(401).json({ message: "Unauthorized" });
@@ -15,7 +15,7 @@ const isCompany = async (req, res, next) => {
 };
 
 const isAdmin = async (req, res, next) => {
-  if (req.user.role === "admin") {
+  if (req.user.role === "Admin") {
     next();
   } else {
     return res.status(401).json({ message: "Unauthorized" });

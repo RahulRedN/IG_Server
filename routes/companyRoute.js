@@ -16,6 +16,11 @@ const router = express.Router();
 router.use(auth, isCompany);
 /**
  * @swagger
+ * tags:
+ *  - name: Company
+ */
+/**
+ * @swagger
  * /api/company/user:
  *   get:
  *     summary: Get company details

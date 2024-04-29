@@ -23,6 +23,9 @@ const corsOptions = {
   credentials: true,
 };
 
+
+
+
 const accesslogStream = rfs.createStream("access.log", {
   interval: "1d",
   path: "./logs",
@@ -78,7 +81,7 @@ app.use((err, req, res, next) => {
   console.log("Error handling middleware called");
   console.log("Path", req.path);
   console.error("Error", err);
-
+  
   if (err.type === "redirect") {
     res.redirect("/error");
   } else if (err.type === "time-out") {
@@ -105,7 +108,17 @@ const options = {
       {
         url: "http://localhost:8080"
       }
-    ]
+    ], 
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [{ bearerAuth: [] }],
   },
   apis: ['./routes/*.js','./server.js']
 }
@@ -113,7 +126,6 @@ const options = {
 const swaggerspec = swaggerJSDoc(options)
 app.use('/api-docs',swaggerUI.serve, swaggerUI.setup(swaggerspec))
 // ----------------------------------------------------------------------------------------------------
-
 start();
 
 
