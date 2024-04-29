@@ -6,6 +6,7 @@ const Application = require("../models/Application");
 const Testimonial = require('../models/Testimonial')
 const Job = require("../models/Job");
 const mongoose = require("mongoose");
+const { helper } = require("../redis/helper");
 
 
 const UserDetails = async (req, res) => {
@@ -18,13 +19,23 @@ const UserDetails = async (req, res) => {
   }
   const applications = await Application.find({ userId: user._id });
 
-  const jobs = await Job.find({});
+  const jobs = await helper("jobs", async () => {
+    return await Job.find({});
+  });
 
   return res.status(StatusCodes.OK).json({ user, applications, jobs });
+
 };
 
 const Jobs = async (req, res) => {
-  const jobs = await Job.find({});
+
+  // const jobs = await Job.find({});
+  console.log("jobs called");
+
+  const jobs = await helper("jobs", async () => {
+    return await Job.find({});
+  });
+
   return res.status(StatusCodes.OK).json({ jobs });
 };
 

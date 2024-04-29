@@ -17,9 +17,11 @@ const {
 
 const multer = require("multer");
 const { storage } = require("../cloudinary");
+const auth = require("../middleware/AuthenticationMiddleware");
+const {isJobSeeker} = require("../middleware/Validators");
 const upload = multer({ storage });
 
-
+router.use(auth,isJobSeeker);
 /**
  * @swagger
  * tags:
@@ -31,6 +33,9 @@ const upload = multer({ storage });
 * /api/jobseeker/user:
 *   get:
 *     summary: Get details of a job seeker
+*     tags: [JobSeeker]
+*     security:
+*       - bearerAuth: []
 *     parameters:
 *       - in: query
 *         name: uid
@@ -109,6 +114,7 @@ router.get("/user", UserDetails);
 * /api/jobseeker/addfav:
 *   post:
 *     summary: Add a job to user's favorites
+*     tags: [JobSeeker]
 *     parameters:
 *       - in: query
 *         name: uid
@@ -153,6 +159,7 @@ router.post("/addfav", setFavJobs);
 * /api/jobseeker/removefav:
 *   post:
 *     summary: Remove a job from user's favorites
+*     tags: [JobSeeker]
 *     parameters:
 *       - in: query
 *         name: uid
@@ -195,6 +202,7 @@ router.post("/removefav", removeFavJobs);
  * /api/jobseeker/updatedetails:
  *   post:
  *     summary: Update job seeker details
+ *     tags: [JobSeeker]
  *     description: Endpoint to update job seeker details
  *     requestBody:
  *       required: true
@@ -229,6 +237,7 @@ router.post('/updatedetails', updateDetails)
  * /api/jobseeker/updatephoto:
  *   post:
  *     summary: Update user photo
+ *     tags: [JobSeeker]
  *     description: Endpoint to update the photo of a job seeker
  *     consumes:
  *       - multipart/form-data
@@ -267,6 +276,7 @@ router.post('/updatephoto', upload.single('image'), catchAsync(updatephoto))
 * /api/jobseeker/jobs:
 *   get:
 *     summary: Get all available jobs
+*     tags: [JobSeeker]
 *     responses:
 *       '200':
 *         description: List of all available jobs
@@ -308,6 +318,7 @@ router.get("/jobs", Jobs);
  * /api/jobseeker/applyjob:
  *   post:
  *     summary: Apply for a job
+ *     tags: [JobSeeker]
  *     description: Endpoint to apply for a job
  *     requestBody:
  *       required: true
@@ -339,6 +350,7 @@ router.post('/applyjob', applyJob)
  * /api/jobseeker/postReview:
  *   post:
  *     summary: Post a review for an accepted job application
+ *     tags: [JobSeeker]
  *     description: Allows job seekers to post a review for an accepted job application
  *     requestBody:
  *       required: true
@@ -377,6 +389,7 @@ router.post("/postReview", postReview);
  * /api/jobseeker/updateskills:
  *   post:
  *     summary: Update job seeker skills
+ *     tags: [JobSeeker]
  *     description: Endpoint to update job seeker skills
  *     requestBody:
  *       required: true
@@ -406,6 +419,7 @@ router.post('/updateskills', updateSkills)
  * /api/jobseeker/noofapplications:
  *   post:
  *     summary: Get the number of applicants for one or more jobs
+ *     tags: [JobSeeker]
  *     description: Endpoint to get the number of applicants for one or more jobs
  *     requestBody:
  *       required: true
@@ -450,6 +464,7 @@ router.post('/noofapplications', noOfApplicants)
  * /api/jobseeker/testimonial:
  *   post:
  *     summary: Post a testimonial
+ *     tags: [JobSeeker]
  *     description: Endpoint to post a testimonial for a job seeker
  *     requestBody:
  *       required: true
