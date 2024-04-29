@@ -8,12 +8,15 @@ const registerJobseeker = async (req, res) => {
   const { email } = req.body;
   const emailExists = await Jobseeker.findOne({ email });
   if (emailExists) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Email already exists!" });
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Email already exists!" });
   }
 
   const user = await Jobseeker.create({
     ...req.body,
-    img: req.file.path,
+    img: req.files["image"][0].path,
+    resume: req.files["resume"][0].path,
   });
   const tokenJobseeker = createTokenUser({
     name: user.fname,
@@ -21,14 +24,18 @@ const registerJobseeker = async (req, res) => {
     role: "jobseeker",
   });
   const cook = attachCookiesToResponse({ res, user: tokenJobseeker });
-  return res.status(StatusCodes.CREATED).json({ user: tokenJobseeker, cookie: cook });
+  return res
+    .status(StatusCodes.CREATED)
+    .json({ user: tokenJobseeker, cookie: cook });
 };
 
 const registerCompany = async (req, res) => {
   const { email, name, password } = req.body;
   const emailExists = await Company.findOne({ email });
   if (emailExists) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Email already exists!" });
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Email already exists!" });
   }
 
   const user = await Company.create({ name, email, password });
@@ -39,30 +46,42 @@ const registerCompany = async (req, res) => {
   });
   const cook = attachCookiesToResponse({ res, user: tokenCompany });
 
-  return res.status(StatusCodes.CREATED).json({ user: tokenCompany, cookie: cook });
+  return res
+    .status(StatusCodes.CREATED)
+    .json({ user: tokenCompany, cookie: cook });
 };
 
 const loginCompany = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Please provide email and password!" });
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Please provide email and password!" });
   }
   const company = await Company.findOne({ email });
   if (!company) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({ msg: "Email does not exist!" });
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ msg: "Email does not exist!" });
   }
   const isPasswordCorrect = await company.comparePassword(password);
 
   if (!isPasswordCorrect) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({ msg: "Invalid password!" });
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ msg: "Invalid password!" });
   }
 
   if (company.status == "pending") {
-    return res.status(StatusCodes.UNAUTHORIZED).json({ msg: "Your account is pending for approval!" });
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ msg: "Your account is pending for approval!" });
   }
 
   if (company.status == "rejected") {
-    return res.status(StatusCodes.UNAUTHORIZED).json({ msg: "Your account has been been rejected!" });
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ msg: "Your account has been been rejected!" });
   }
   const tokenCompany = createTokenUser({
     name: company.name,
@@ -70,23 +89,30 @@ const loginCompany = async (req, res) => {
     role: "company",
   });
   const cook = attachCookiesToResponse({ res, user: tokenCompany });
-  return res.status(StatusCodes.OK).json({ Company: tokenCompany, cookie: cook });
+  return res
+    .status(StatusCodes.OK)
+    .json({ Company: tokenCompany, cookie: cook });
 };
 
 const loginJobseeker = async (req, res) => {
-
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Please provide email and password!" });
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Please provide email and password!" });
   }
   const jobseeker = await Jobseeker.findOne({ email });
   if (!jobseeker) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({ msg: "Email does not exist!" });
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ msg: "Email does not exist!" });
   }
   const isPasswordCorrect = await jobseeker.comparePassword(password);
   if (!isPasswordCorrect) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({ msg: "Invalid password!" });
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ msg: "Invalid password!" });
   }
 
   const tokenJobseeker = createTokenUser({
@@ -96,11 +122,11 @@ const loginJobseeker = async (req, res) => {
   });
 
   const cook = attachCookiesToResponse({ res, user: tokenJobseeker });
-  
-  return res.status(StatusCodes.OK).json({ Jobseeker: tokenJobseeker, cookie: cook });
 
-}
-
+  return res
+    .status(StatusCodes.OK)
+    .json({ Jobseeker: tokenJobseeker, cookie: cook });
+};
 
 const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
@@ -121,9 +147,7 @@ const loginAdmin = async (req, res) => {
   });
 
   const cook = attachCookiesToResponse({ res, user: tokenAdmin });
-  return res
-    .status(StatusCodes.OK)
-    .json({ Admin: tokenAdmin, cookie: cook });
+  return res.status(StatusCodes.OK).json({ Admin: tokenAdmin, cookie: cook });
 };
 
 const logout = async (req, res) => {
@@ -134,4 +158,11 @@ const logout = async (req, res) => {
   return res.status(StatusCodes.OK).json({ msg: "Logged out!!" });
 };
 
-module.exports = { registerJobseeker, registerCompany, loginJobseeker, loginCompany, logout,loginAdmin };
+module.exports = {
+  registerJobseeker,
+  registerCompany,
+  loginJobseeker,
+  loginCompany,
+  logout,
+  loginAdmin,
+};
