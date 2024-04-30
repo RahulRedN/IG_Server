@@ -33,8 +33,8 @@ const accesslogStream = rfs.createStream("access.log", {
 
 app.use(morgan("combined", { stream: accesslogStream }));
 
-app.use(morgan("dev"));
 //application middleware
+app.use(morgan("dev"));
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(helmet());
