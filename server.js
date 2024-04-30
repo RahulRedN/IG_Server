@@ -18,7 +18,7 @@ const companyRouter = require("./routes/companyRoute");
 const adminRouter = require("./routes/adminRoute");
 
 const corsOptions = {
-  origin: process.env.origin,
+  origin: process.env.ORIGIN,
   methods: ["GET", "POST", "PUT"],
   credentials: true,
 };
