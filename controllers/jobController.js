@@ -150,7 +150,7 @@ const applyJob = async (req, res) => {
 
   const jobs = await Job.find({});
 
-  client.set("jobs", jobs);
+  await client.set("jobs", jobs);
 
   return res.status(StatusCodes.OK).json({ msg: "Applied to job!" });
 };

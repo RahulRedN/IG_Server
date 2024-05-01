@@ -46,10 +46,6 @@ const getAllCompanies = async (req, res) => {
       applications.push(appCount);
     }));
 
-    const jobs = await Job.find({});
-
-    client.set("jobs", jobs);
-
     return res
       .status(StatusCodes.OK)
       .json({ companies, jobsPosted, applications });

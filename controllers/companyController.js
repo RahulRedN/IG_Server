@@ -28,10 +28,6 @@ const companyDetails = async (req, res) => {
     _id: { $in: applications.map((emp) => emp.userId) },
   });
 
-  const jobs = await Job.find({});
-
-  client.set("jobs", jobs);
-
   return res
     .status(StatusCodes.OK)
     .json({ company, applications, companyJobs, userInfo });
@@ -66,7 +62,7 @@ const updateJobRequest = async (req, res) => {
 
   const jobs = await Job.find({});
 
-  client.set("jobs", jobs);
+  await client.set("jobs", jobs);
 
   return res.status(StatusCodes.OK).json({ msg: "Updated" });
 };
@@ -112,7 +108,7 @@ const postJob = async (req, res) => {
 
   const jobs = await Job.find({});
 
-  client.set("jobs", jobs);
+  await client.set("jobs", jobs);
 
 
   return res
@@ -143,7 +139,7 @@ const updateJob = async (req, res) => {
 
   const jobs = await Job.find({});
 
-  client.set("jobs", jobs);
+  await client.set("jobs", jobs);
 
   return res.status(StatusCodes.OK).json({ msg: "Job updated!" });
 };
@@ -173,7 +169,7 @@ const deleteJob = async (req, res) => {
 
   const jobs = await Job.find({});
 
-  client.set("jobs", jobs);
+  await client.set("jobs", jobs);
 
   return res.status(StatusCodes.OK).json({ msg: "Job deleted!" });
 };
