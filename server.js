@@ -18,7 +18,7 @@ const companyRouter = require("./routes/companyRoute");
 const adminRouter = require("./routes/adminRoute");
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.ORIGIN,
   methods: ["GET", "POST", "PUT"],
   credentials: true,
 };
@@ -98,17 +98,17 @@ const swaggerUI = require('swagger-ui-express')
 
 const options = {
   definition: {
-    openapi: '3.0.0',
+    openapi: "3.0.0",
     info: {
-      title: 'INSPIRING GO API TESTING SITE',
+      title: "INSPIRING GO API TESTING SITE",
       version: "1.0.0",
-      description: "A simple Express API to perform CRUD operations"
+      description: "A simple Express API to perform CRUD operations",
     },
     servers: [
       {
-        url: "http://localhost:8080"
-      }
-    ], 
+        url: "https://ig-server-ef9r.onrender.com/",
+      },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -120,72 +120,10 @@ const options = {
     },
     security: [{ bearerAuth: [] }],
   },
-  apis: ['./routes/*.js','./server.js']
-}
+  apis: ["./routes/*.js", "./server.js"],
+};
 
 const swaggerspec = swaggerJSDoc(options)
 app.use('/api-docs',swaggerUI.serve, swaggerUI.setup(swaggerspec))
 // ----------------------------------------------------------------------------------------------------
 start();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const fileStorageEngine = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "./images");
-//   },
-//   filename: (req, file, cb) => {
-//     cb(false, Date.now() + "--" + file.originalname);
-//   },
-// });
-
-// var accessLogStream = rfs.createStream("S20210010167.log", {
-//   interval: "1h",
-//   path: path.join(__dirname, "log"),
-// });
-
-// const upload = multer({ storage: fileStorageEngine });
-
-// app.use(morgan("combined", { stream: accessLogStream }));

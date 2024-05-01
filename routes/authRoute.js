@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const catchAsync = require('../utils/catchAsync')
+const catchAsync = require("../utils/catchAsync");
 
 const {
   registerJobseeker,
@@ -11,16 +11,20 @@ const {
   loginAdmin,
 } = require("../controllers/authController");
 
-const multer = require('multer')
+const multer = require("multer");
 
-
-const { storage } = require('../cloudinary')
-const upload = multer({ storage })
-
-
+const { storage } = require("../cloudinary");
+const upload = multer({ storage });
 
 router.post("/registerCompany", registerCompany);
-router.post("/registerJobseeker", upload.single("image"), catchAsync(registerJobseeker));
+router.post(
+  "/registerJobseeker",
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "resume", maxCount: 1 },
+  ]),
+  catchAsync(registerJobseeker)
+);
 /**
  * @swagger
  * tags:
@@ -122,7 +126,7 @@ router.post("/loginCompany", loginCompany);
  *       '401':
  *         description: Email does not exist or invalid password
  */
-router.post('/loginJobseeker', loginJobseeker)
+router.post("/loginJobseeker", loginJobseeker);
 
 /**
  * @swagger
@@ -189,7 +193,7 @@ router.post('/loginJobseeker', loginJobseeker)
  *                   type: string
  *                   description: Error message
  */
-router.post('/loginAdmin', loginAdmin);
+router.post("/loginAdmin", loginAdmin);
 
 router.get("/logout", logout);
 

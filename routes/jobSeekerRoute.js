@@ -18,10 +18,10 @@ const {
 const multer = require("multer");
 const { storage } = require("../cloudinary");
 const auth = require("../middleware/AuthenticationMiddleware");
-const {isJobSeeker} = require("../middleware/Validators");
+const { isJobSeeker } = require("../middleware/Validators");
 const upload = multer({ storage });
 
-router.use(auth,isJobSeeker);
+router.use(auth, isJobSeeker);
 /**
  * @swagger
  * tags:
@@ -29,172 +29,170 @@ router.use(auth,isJobSeeker);
  */
 
 /**
-* @swagger
-* /api/jobseeker/user:
-*   get:
-*     summary: Get details of a job seeker
-*     tags: [JobSeeker]
-*     security:
-*       - bearerAuth: []
-*     parameters:
-*       - in: query
-*         name: uid
-*         required: true
-*         schema:
-*           type: string
-*         description: The ID of the user
-*     responses:
-*       '200':
-*         description: User details retrieved successfully
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 user:
-*                   type: object
-*                   description: Details of the job seeker
-*                 applications:
-*                   type: array
-*                   description: List of job applications made by the job seeker
-*                   items:
-*                     type: object
-*                     properties:
-*                       _id:
-*                         type: string
-*                         description: ID of the application
-*                       jobId:
-*                         type: string
-*                         description: ID of the job applied for
-*                       userId:
-*                         type: string
-*                         description: ID of the job seeker who made the application
-*                 jobs:
-*                   type: array
-*                   description: List of all available jobs
-*                   items:
-*                     type: object
-*                     properties:
-*                       _id:
-*                         type: string
-*                         description: ID of the job
-*                       title:
-*                         type: string
-*                         description: Title of the job
-*                       description:
-*                         type: string
-*                         description: Description of the job
-*                     
-*       '404':
-*         description: User not found
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 msg:
-*                   type: string
-*                   description: Error message
-*       '500':
-*         description: Internal server error
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 msg:
-*                   type: string
-*                   description: Error message
-*/
+ * @swagger
+ * /api/jobseeker/user:
+ *   get:
+ *     summary: Get details of a job seeker
+ *     tags: [JobSeeker]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: uid
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *     responses:
+ *       '200':
+ *         description: User details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   description: Details of the job seeker
+ *                 applications:
+ *                   type: array
+ *                   description: List of job applications made by the job seeker
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: ID of the application
+ *                       jobId:
+ *                         type: string
+ *                         description: ID of the job applied for
+ *                       userId:
+ *                         type: string
+ *                         description: ID of the job seeker who made the application
+ *                 jobs:
+ *                   type: array
+ *                   description: List of all available jobs
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: ID of the job
+ *                       title:
+ *                         type: string
+ *                         description: Title of the job
+ *                       description:
+ *                         type: string
+ *                         description: Description of the job
+ *
+ *       '404':
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Error message
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Error message
+ */
 
 router.get("/user", UserDetails);
 
 /**
-* @swagger
-* /api/jobseeker/addfav:
-*   post:
-*     summary: Add a job to user's favorites
-*     tags: [JobSeeker]
-*     parameters:
-*       - in: query
-*         name: uid
-*         required: true
-*         schema:
-*           type: string
-*         description: The ID of the user
-*       - in: query
-*         name: jid
-*         required: true
-*         schema:
-*           type: string
-*         description: The ID of the job to add to favorites
-*     responses:
-*       '200':
-*         description: Job added to favorites successfully
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 msg:
-*                   type: string
-*                   description: Success message
-*       '404':
-*         description: User not found
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 msg:
-*                   type: string
-*                   description: Error message
-*/
+ * @swagger
+ * /api/jobseeker/addfav:
+ *   post:
+ *     summary: Add a job to user's favorites
+ *     tags: [JobSeeker]
+ *     parameters:
+ *       - in: query
+ *         name: uid
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *       - in: query
+ *         name: jid
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the job to add to favorites
+ *     responses:
+ *       '200':
+ *         description: Job added to favorites successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Success message
+ *       '404':
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Error message
+ */
 router.post("/addfav", setFavJobs);
 
-
-
 /**
-* @swagger
-* /api/jobseeker/removefav:
-*   post:
-*     summary: Remove a job from user's favorites
-*     tags: [JobSeeker]
-*     parameters:
-*       - in: query
-*         name: uid
-*         required: true
-*         schema:
-*           type: string
-*         description: The ID of the user
-*       - in: query
-*         name: jid
-*         required: true
-*         schema:
-*           type: string
-*         description: The ID of the job to remove from favorites
-*     responses:
-*       '200':
-*         description: Job removed from favorites successfully
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 msg:
-*                   type: string
-*                   description: Success message
-*       '404':
-*         description: User not found
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 msg:
-*                   type: string
-*                   description: Error message
-*/
+ * @swagger
+ * /api/jobseeker/removefav:
+ *   post:
+ *     summary: Remove a job from user's favorites
+ *     tags: [JobSeeker]
+ *     parameters:
+ *       - in: query
+ *         name: uid
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *       - in: query
+ *         name: jid
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the job to remove from favorites
+ *     responses:
+ *       '200':
+ *         description: Job removed from favorites successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Success message
+ *       '404':
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Error message
+ */
 router.post("/removefav", removeFavJobs);
 
 /**
@@ -229,8 +227,11 @@ router.post("/removefav", removeFavJobs);
  *       '404':
  *         description: User not found
  */
-router.post('/updatedetails', updateDetails)
-
+router.post(
+  "/updatedetails",
+  upload.single("resume"),
+  catchAsync(updateDetails)
+);
 
 /**
  * @swagger
@@ -269,48 +270,48 @@ router.post('/updatedetails', updateDetails)
  *       '404':
  *         description: User not found
  */
-router.post('/updatephoto', upload.single('image'), catchAsync(updatephoto))
+router.post("/updatephoto", upload.single("image"), catchAsync(updatephoto));
 
 /**
-* @swagger
-* /api/jobseeker/jobs:
-*   get:
-*     summary: Get all available jobs
-*     tags: [JobSeeker]
-*     responses:
-*       '200':
-*         description: List of all available jobs
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 jobs:
-*                   type: array
-*                   description: List of available jobs
-*                   items:
-*                     type: object
-*                     properties:
-*                       _id:
-*                         type: string
-*                         description: ID of the job
-*                       title:
-*                         type: string
-*                         description: Title of the job
-*                       description:
-*                         type: string
-*                         description: Description of the job
-*       '500':
-*         description: Internal server error
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 msg:
-*                   type: string
-*                   description: Error message
-*/
+ * @swagger
+ * /api/jobseeker/jobs:
+ *   get:
+ *     summary: Get all available jobs
+ *     tags: [JobSeeker]
+ *     responses:
+ *       '200':
+ *         description: List of all available jobs
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 jobs:
+ *                   type: array
+ *                   description: List of available jobs
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: ID of the job
+ *                       title:
+ *                         type: string
+ *                         description: Title of the job
+ *                       description:
+ *                         type: string
+ *                         description: Description of the job
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Error message
+ */
 router.get("/jobs", Jobs);
 
 /**
@@ -343,7 +344,7 @@ router.get("/jobs", Jobs);
  *       '500':
  *         description: Internal server error
  */
-router.post('/applyjob', applyJob)
+router.post("/applyjob", applyJob);
 
 /**
  * @swagger
@@ -412,7 +413,7 @@ router.post("/postReview", postReview);
  *       '404':
  *         description: User not found
  */
-router.post('/updateskills', updateSkills)
+router.post("/updateskills", updateSkills);
 
 /**
  * @swagger
@@ -456,8 +457,7 @@ router.post('/updateskills', updateSkills)
  *       '400':
  *         description: Bad request or invalid input
  */
-router.post('/noofapplications', noOfApplicants)
-
+router.post("/noofapplications", noOfApplicants);
 
 /**
  * @swagger
@@ -485,6 +485,6 @@ router.post('/noofapplications', noOfApplicants)
  *       '400':
  *         description: Bad request or testimonial failed
  */
-router.post('/testimonial', postTestimonial)
+router.post("/testimonial", postTestimonial);
 
 module.exports = router;
