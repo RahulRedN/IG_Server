@@ -24,8 +24,6 @@ const corsOptions = {
 };
 
 
-
-
 const accesslogStream = rfs.createStream("access.log", {
   interval: "1d",
   path: "./logs",
