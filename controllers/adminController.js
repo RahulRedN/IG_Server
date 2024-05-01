@@ -4,6 +4,7 @@ const Company = require("../models/Company");
 const Application = require("../models/Application");
 const Testimonial = require("../models/Testimonial");
 const Job = require("../models/Job");
+const moment = require("moment");
 
 const getAllJobseekers = async (req, res) => {
   const jobseekers = await Jobseeker.find({});
@@ -32,19 +33,21 @@ const getAllCompanies = async (req, res) => {
     let applications = [];
 
     // Fetch job details for each company
-    await Promise.all(companies.map(async (company) => {
-      // Find jobs for the company
-      const jobs = await Job.find({ companyId: company._id });
+    await Promise.all(
+      companies.map(async (company) => {
+        // Find jobs for the company
+        const jobs = await Job.find({ companyId: company._id });
 
-      jobsPosted.push(jobs.length);
+        jobsPosted.push(jobs.length);
 
-      // Count applications for each job
-      const appCount = await Application.find({
-        jobId: { $in: jobs.map(job => job._id) }
-      }).countDocuments();
+        // Count applications for each job
+        const appCount = await Application.find({
+          jobId: { $in: jobs.map((job) => job._id) },
+        }).countDocuments();
 
-      applications.push(appCount);
-    }));
+        applications.push(appCount);
+      })
+    );
 
     return res
       .status(StatusCodes.OK)
@@ -56,7 +59,6 @@ const getAllCompanies = async (req, res) => {
       .json({ msg: "Internal server error" });
   }
 };
-
 
 const getpendingCompanies = async (req, res) => {
   //status having pending are not needed
@@ -78,23 +80,16 @@ const getrecentUsersStats = async (req, res) => {
     .sort({ createdAt: -1 })
     .limit(5);
 
-  const userCount = await Jobseeker.countDocuments();
-
-  const companyCount = await Company.countDocuments({ status: "accepted" });
-
-  const incomingReq = await Company.find({
-    status: "pending",
-  }).countDocuments();
-
-  const reviews = await Testimonial.countDocuments();
+  const users = await Jobseeker.find({});
+  const companies = await Company.find({});
+  const reviews = await Testimonial.find({});
 
   return res.status(StatusCodes.OK).json({
     recentusers: recentusers,
     recentcompanies: recentcompanies,
-    USR: userCount,
-    CCR: companyCount,
-    ICR: incomingReq,
-    RCR: reviews,
+    users: users,
+    companies: companies,
+    reviews: reviews,
   });
 };
 
@@ -125,7 +120,7 @@ const bookmarkUpdate = async (req, res) => {
   let testimonial;
 
   if (action === "true") {
-    console.log("TRUEEE")
+    console.log("TRUEEE");
     testimonial = await Testimonial.findOneAndUpdate(
       { _id: tid },
       { $set: { bookmarked: true } }
@@ -191,7 +186,6 @@ const getQueries = async (req, res) => {
   }
   return res.status(StatusCodes.OK).json({ queries });
 };
-
 
 module.exports = {
   getAllJobseekers,
