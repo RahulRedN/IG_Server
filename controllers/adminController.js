@@ -30,28 +30,30 @@ const getAllCompanies = async (req, res) => {
     }
 
     let jobsPosted = [];
-    let applications = [];
+    let employees = [];
 
-    // Fetch job details for each company
-    await Promise.all(
-      companies.map(async (company) => {
-        // Find jobs for the company
-        const jobs = await Job.find({ companyId: company._id });
+    // Find all jobs posted by these companies
 
-        jobsPosted.push(jobs.length);
+    for (let i = 0; i < companies.length; i++) {
+      const jobs = await Job.find({ companyId: companies[i]._id });
+      jobsPosted.push(jobs.length);
+    }
 
-        // Count applications for each job
-        const appCount = await Application.find({
-          jobId: { $in: jobs.map((job) => job._id) },
-        }).countDocuments();
+    // Find all the employees of these companies
 
-        applications.push(appCount);
-      })
-    );
+    for (let i = 0; i < companies.length; i++) {
 
+      const res = 
+
+
+      employees.push(employees.length);
+    }
+
+   
     return res
       .status(StatusCodes.OK)
-      .json({ companies, jobsPosted, applications });
+      .json({ companies, jobsPosted, employees });
+
   } catch (error) {
     console.error("Error in getAllCompanies:", error);
     return res
