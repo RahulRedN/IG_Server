@@ -46,6 +46,10 @@ const getAllCompanies = async (req, res) => {
       applications.push(appCount);
     }));
 
+    const jobs = await Job.find({});
+
+    client.set("jobs", jobs);
+
     return res
       .status(StatusCodes.OK)
       .json({ companies, jobsPosted, applications });
@@ -160,7 +164,7 @@ const deleteUser = async (req, res) => {
 
 const deleteCompany = async (req, res) => {
   const { uid } = req.body;
-  
+
   const company = await Company.findByIdAndDelete({ _id: uid });
 
   if (!company) {

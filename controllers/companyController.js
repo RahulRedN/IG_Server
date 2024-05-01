@@ -5,6 +5,7 @@ const { attachCookiesToResponse, createTokenUser } = require("../utils");
 const Application = require("../models/Application");
 const Job = require("../models/Job");
 const Jobseeker = require("../models/Jobseeker");
+const client = require("../redis/client");
 
 const companyDetails = async (req, res) => {
   const { uid } = req.query;
@@ -26,6 +27,10 @@ const companyDetails = async (req, res) => {
   const userInfo = await Jobseeker.find({
     _id: { $in: applications.map((emp) => emp.userId) },
   });
+
+  const jobs = await Job.find({});
+
+  client.set("jobs", jobs);
 
   return res
     .status(StatusCodes.OK)
@@ -58,6 +63,10 @@ const updateJobRequest = async (req, res) => {
       .status(StatusCodes.NOT_FOUND)
       .json({ msg: "Application not found!" });
   }
+
+  const jobs = await Job.find({});
+
+  client.set("jobs", jobs);
 
   return res.status(StatusCodes.OK).json({ msg: "Updated" });
 };
@@ -101,6 +110,11 @@ const postJob = async (req, res) => {
       .json({ msg: "Job posting failed!" });
   }
 
+  const jobs = await Job.find({});
+
+  client.set("jobs", jobs);
+
+
   return res
     .status(StatusCodes.OK)
     .json({ msg: "Job posted!", jobId: job._id });
@@ -127,6 +141,10 @@ const updateJob = async (req, res) => {
       .json({ msg: "Job update failed!" });
   }
 
+  const jobs = await Job.find({});
+
+  client.set("jobs", jobs);
+
   return res.status(StatusCodes.OK).json({ msg: "Job updated!" });
 };
 
@@ -152,6 +170,10 @@ const deleteJob = async (req, res) => {
   if (!application) {
     return res.status(StatusCodes.NOT_FOUND).json({ msg: "Applications not found!" });
   }
+
+  const jobs = await Job.find({});
+
+  client.set("jobs", jobs);
 
   return res.status(StatusCodes.OK).json({ msg: "Job deleted!" });
 };
