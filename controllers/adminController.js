@@ -21,6 +21,7 @@ const getAllJobseekers = async (req, res) => {
 const getAllCompanies = async (req, res) => {
   try {
     // Find non-pending companies
+
     const companies = await Company.find({ status: { $ne: "pending" } });
 
     if (!companies || companies.length === 0) {
@@ -43,10 +44,8 @@ const getAllCompanies = async (req, res) => {
 
     for (let i = 0; i < companies.length; i++) {
 
-      const res = 
-
-
-      employees.push(employees.length);
+      let employeesCount = await Application.find({ companyId: companies[i]._id })
+      employees.push(employeesCount.length);
     }
 
    
