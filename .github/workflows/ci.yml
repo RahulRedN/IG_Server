@@ -21,4 +21,8 @@ jobs:
           docker build -t sravankrishna/inspiringgo_server:latest .
           docker push sravankrishna/inspiringgo_server:latest
 
+      - name: Deploy to Render
+        run: |
+          curl -X POST ${{ secrets.DOCKER_TRIGGER }}
+
  
