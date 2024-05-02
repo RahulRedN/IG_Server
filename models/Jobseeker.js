@@ -45,6 +45,10 @@ const JobseekerSchema = new mongoose.Schema(
       type: String,
       required: [true, "Image is a required field!"],
     },
+    resume: {
+      type: String,
+      required: [true, "Resume is a required field!"],
+    },
     marital: {
       type: String,
       required: [true, "Marital Status is a required field!"],

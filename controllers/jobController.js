@@ -3,10 +3,12 @@ const Company = require("../models/Company");
 const CustomError = require("../errors");
 const { StatusCodes } = require("http-status-codes");
 const Application = require("../models/Application");
-const Testimonial = require('../models/Testimonial')
+const Testimonial = require("../models/Testimonial");
 const Job = require("../models/Job");
 const mongoose = require("mongoose");
 const { helper } = require("../redis/helper");
+
+const client = require('../redis/client.js');
 
 
 const UserDetails = async (req, res) => {
@@ -24,11 +26,9 @@ const UserDetails = async (req, res) => {
   });
 
   return res.status(StatusCodes.OK).json({ user, applications, jobs });
-
 };
 
 const Jobs = async (req, res) => {
-
   // const jobs = await Job.find({});
   console.log("jobs called");
 
@@ -55,22 +55,29 @@ const setFavJobs = async (req, res) => {
     return res.status(StatusCodes.NOT_FOUND).json({ msg: "User not found!" });
   }
 
+
   return res.status(StatusCodes.OK).json({ msg: "Job added to favourites!" });
 };
 
 const updateDetails = async (req, res) => {
-  const { fname, mobile, address, uid } = req.body;
+  const { fname, mobile, address, uid, resume } = req.body;
+  const updateData = { fname, mobile, address, resume };
 
-  const user = await Jobseeker.findOneAndUpdate(
-    { _id: uid },
-    { fname, mobile, address }
-  );
+  if (req.file?.path) {
+    updateData.resume = req.file.path;
+  }
+
+  const user = await Jobseeker.findOneAndUpdate({ _id: uid }, updateData, {
+    new: true,
+  });
 
   if (!user) {
     return res.status(StatusCodes.NOT_FOUND).json({ msg: "User not found!" });
   }
 
-  return res.status(StatusCodes.OK).json({ msg: "Details updated!" });
+  return res
+    .status(StatusCodes.OK)
+    .json({ msg: "Details updated!", path: updateData.resume });
 };
 
 const removeFavJobs = async (req, res) => {
@@ -125,7 +132,7 @@ const applyJob = async (req, res) => {
     return res.status(StatusCodes.BAD_REQUEST).json({ msg: "No vacancies!" });
   }
 
-  const application = await Application.findOne({ userId: uid, jobId: jid });
+  const application = await Application.findOne({ userId: uid, jobId: jid, companyId: job.companyId});
 
   if (application) {
     return res
@@ -133,13 +140,17 @@ const applyJob = async (req, res) => {
       .json({ msg: "Already applied!" });
   }
 
-  const re = await Application.create({ userId: uid, jobId: jid });
+  const re = await Application.create({ userId: uid, jobId: jid , companyId: job.companyId});
 
   if (!re) {
     return res
       .status(StatusCodes.BAD_REQUEST)
       .json({ msg: "Application failed!" });
   }
+
+  const jobs = await Job.find({});
+
+  await client.set("jobs", jobs);
 
   return res.status(StatusCodes.OK).json({ msg: "Applied to job!" });
 };
@@ -161,7 +172,7 @@ const updateSkills = async (req, res) => {
 
 const postReview = async (req, res) => {
   const { uid, aid, type, rating, feedback } = req.body;
-  console.log(req.body)
+  console.log(req.body);
   const application = await Application.findOneAndUpdate(
     { _id: aid, userId: uid, status: "accepted" },
     { review: { type, rating, feedback, reviewed: true } }
@@ -174,39 +185,43 @@ const postReview = async (req, res) => {
   return res.status(StatusCodes.OK).json({ msg: "Review posted!" });
 };
 
-
 const noOfApplicants = async (req, res) => {
-
   const { jid } = req.body;
 
-  const jobIDs = Array.isArray(jid) ? jid.map(id => new mongoose.Types.ObjectId(id)) : [];
+  const jobIDs = Array.isArray(jid)
+    ? jid.map((id) => new mongoose.Types.ObjectId(id))
+    : [];
 
   // Check if jobIDs array is not empty before proceeding with aggregation
   if (jobIDs.length > 0) {
     const applications = await Application.aggregate([
       { $match: { jobId: { $in: jobIDs } } },
-      { $group: { _id: '$jobId', count: { $sum: 1 } } }
+      { $group: { _id: "$jobId", count: { $sum: 1 } } },
     ]);
     return res.status(StatusCodes.OK).json({ applications });
   }
-}
+};
 
 const postTestimonial = async (req, res) => {
-
   const { uid, message } = req.body;
 
   const userPhoto = await Jobseeker.findOne({ _id: uid });
 
-  const rs = await Testimonial.create({ userId: uid, message,name: userPhoto.fname, imageurl: userPhoto.img });
+  const rs = await Testimonial.create({
+    userId: uid,
+    message,
+    name: userPhoto.fname,
+    imageurl: userPhoto.img,
+  });
 
   if (!rs) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Testimonial failed!" });
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Testimonial failed!" });
   }
 
   return res.status(StatusCodes.OK).json({ msg: "Testimonial posted!" });
-
-
-}
+};
 
 module.exports = {
   UserDetails,
