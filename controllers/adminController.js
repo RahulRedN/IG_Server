@@ -4,6 +4,7 @@ const Company = require("../models/Company");
 const Application = require("../models/Application");
 const Testimonial = require("../models/Testimonial");
 const Job = require("../models/Job");
+const Query = require("../models/Query");
 
 const getAllJobseekers = async (req, res) => {
   const jobseekers = await Jobseeker.find({});
@@ -192,6 +193,24 @@ const getQueries = async (req, res) => {
   return res.status(StatusCodes.OK).json({ queries });
 };
 
+const updateFavoriteTestimonial = async (req, res) => {
+  const { tid, isFavorite } = req.body;
+
+  try {
+    const testimonial = await Testimonial.findByIdAndUpdate(tid, { fav: isFavorite }, { new: true });
+
+    if (!testimonial) {
+      return res.status(StatusCodes.NOT_FOUND).json({ msg: "Testimonial not found" });
+    }
+
+    return res.status(StatusCodes.OK).json({ msg: "Testimonial favorite status updated successfully", testimonial });
+  } catch (error) {
+    console.error("Error in updateFavorite:", error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: "Internal server error" });
+  }
+};
+
+
 
 module.exports = {
   getAllJobseekers,
@@ -205,4 +224,5 @@ module.exports = {
   deleteCompany,
   updateCompany,
   getpendingCompanies,
+  updateFavoriteTestimonial
 };

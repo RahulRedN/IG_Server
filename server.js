@@ -16,10 +16,10 @@ const authRouter = require("./routes/authRoute");
 const jobseekerRouter = require("./routes/jobSeekerRoute");
 const companyRouter = require("./routes/companyRoute");
 const adminRouter = require("./routes/adminRoute");
-
+const homeRouter = require("./routes/homeRoute")
 const corsOptions = {
   origin: process.env.ORIGIN,
-  methods: ["GET", "POST", "PUT"],
+  methods: ["GET", "POST", "PUT","DELETE"],
   credentials: true,
 };
 
@@ -31,6 +31,7 @@ const accesslogStream = rfs.createStream("access.log", {
   path: "./logs",
 });
 
+const Job = require("./models/Job");
 app.use(morgan("combined", { stream: accesslogStream }));
 
 //application middleware
@@ -48,6 +49,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/jobseeker", jobseekerRouter);
 app.use("/api/company", companyRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/home",homeRouter)
 
 //Error middleware
 app.use((err, req, res, next) => {
@@ -89,12 +91,12 @@ app.use((err, req, res, next) => {
   } else res.status(500).send(err);
   next();
 });
-
+a
 
 // ----------------------------------------------------------------------------------------------------
 //                  SWAGGER
 const swaggerJSDoc = require('swagger-jsdoc')
-const swaggerUI = require('swagger-ui-express')
+const swaggerUI = require('swagger-ui-express');
 
 const options = {
   definition: {

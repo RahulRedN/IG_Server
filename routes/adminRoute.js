@@ -11,6 +11,7 @@ const {
   deleteCompany,
   updateCompany,
   getpendingCompanies,
+  updateFavoriteTestimonial
 } = require("../controllers/adminController");
 const auth = require("../middleware/AuthenticationMiddleware");
 const { isAdmin } = require("../middleware/Validators");
@@ -291,5 +292,34 @@ router.delete('/deleteCompany', deleteCompany)
  *         description: Company not found
  */
 router.put('/updateCompany', updateCompany)
+
+/**
+ * @swagger
+ * /api/admin/updateFavorite:
+ *   put:
+ *     summary: Update favorite status of a testimonial
+ *     tags: [Admin]
+ *     description: Update the favorite status of a testimonial by its ID.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tid:
+ *                 type: string
+ *                 description: The ID of the testimonial to update
+ *               isFavorite:
+ *                 type: boolean
+ *                 description: The new favorite status of the testimonial
+ *     responses:
+ *       '200':
+ *         description: Testimonial favorite status updated successfully
+ *       '404':
+ *         description: Testimonial not found
+ */
+router.put('/updateFavoriteTestimonial', updateFavoriteTestimonial);
+
 
 module.exports = router;
