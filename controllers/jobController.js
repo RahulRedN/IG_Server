@@ -8,6 +8,9 @@ const Job = require("../models/Job");
 const mongoose = require("mongoose");
 const { helper } = require("../redis/helper");
 
+const client = require('../redis/client.js');
+
+
 const UserDetails = async (req, res) => {
   const { uid } = req.query;
 
@@ -51,6 +54,7 @@ const setFavJobs = async (req, res) => {
   if (!user) {
     return res.status(StatusCodes.NOT_FOUND).json({ msg: "User not found!" });
   }
+
 
   return res.status(StatusCodes.OK).json({ msg: "Job added to favourites!" });
 };
@@ -128,7 +132,7 @@ const applyJob = async (req, res) => {
     return res.status(StatusCodes.BAD_REQUEST).json({ msg: "No vacancies!" });
   }
 
-  const application = await Application.findOne({ userId: uid, jobId: jid });
+  const application = await Application.findOne({ userId: uid, jobId: jid, companyId: job.companyId});
 
   if (application) {
     return res
@@ -136,13 +140,17 @@ const applyJob = async (req, res) => {
       .json({ msg: "Already applied!" });
   }
 
-  const re = await Application.create({ userId: uid, jobId: jid });
+  const re = await Application.create({ userId: uid, jobId: jid , companyId: job.companyId});
 
   if (!re) {
     return res
       .status(StatusCodes.BAD_REQUEST)
       .json({ msg: "Application failed!" });
   }
+
+  const jobs = await Job.find({});
+
+  await client.set("jobs", jobs);
 
   return res.status(StatusCodes.OK).json({ msg: "Applied to job!" });
 };

@@ -19,11 +19,9 @@ const adminRouter = require("./routes/adminRoute");
 const homeRouter = require("./routes/homeRoute")
 const corsOptions = {
   origin: process.env.ORIGIN,
-  methods: ["GET", "POST", "PUT","DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
-
-
 
 
 const accesslogStream = rfs.createStream("access.log", {

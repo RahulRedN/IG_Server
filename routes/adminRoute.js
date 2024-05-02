@@ -44,14 +44,10 @@ router.use(auth, isAdmin);
  *                   type: array
  *                   items:
  *                     type: object
- *                     properties:
- *                       // Define properties of recent user object here
  *                 recentcompanies:
  *                   type: array
  *                   items:
  *                     type: object
- *                     properties:
- *                       // Define properties of recent company object here
  *                 USR:
  *                   type: number
  *                   description: Total user count
