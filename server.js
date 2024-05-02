@@ -104,10 +104,7 @@ const options = {
     },
     servers: [
       {
-        url: [
-          "http://localhost:5173/",
-          "https://inspiringgo-backend.onrender.com/",
-        ],
+        url: "https://inspiringgo-backend.onrender.com/",
       },
     ],
     components: {
