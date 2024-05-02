@@ -18,7 +18,7 @@ jobs:
 
       - name: Build and push backend image
         run: |
-          docker build -t sravankrishna/inspiringgo_server:latest 
+          docker build -t sravankrishna/inspiringgo_server:latest .
           docker push sravankrishna/inspiringgo_server:latest
 
  
