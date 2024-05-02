@@ -6,6 +6,7 @@ const Testimonial = require("../models/Testimonial");
 const Job = require("../models/Job");
 
 const getAllJobseekers = async (req, res) => {
+  console.log("inside get job seekers")
   const jobseekers = await Jobseeker.find({});
 
   if (!jobseekers) {
