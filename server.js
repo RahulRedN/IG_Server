@@ -16,7 +16,7 @@ const authRouter = require("./routes/authRoute");
 const jobseekerRouter = require("./routes/jobSeekerRoute");
 const companyRouter = require("./routes/companyRoute");
 const adminRouter = require("./routes/adminRoute");
-const homeRouter = require("./routes/homeRoute")
+const homeRouter = require("./routes/homeRoute");
 const corsOptions = {
   origin: process.env.ORIGIN,
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -46,7 +46,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/jobseeker", jobseekerRouter);
 app.use("/api/company", companyRouter);
 app.use("/api/admin", adminRouter);
-app.use("/api/home",homeRouter)
+app.use("/api/home", homeRouter);
 
 //Error middleware
 app.use((err, req, res, next) => {
@@ -80,7 +80,7 @@ app.use((err, req, res, next) => {
   console.log("Error handling middleware called");
   console.log("Path", req.path);
   console.error("Error", err);
-  
+
   if (err.type === "redirect") {
     res.redirect("/error");
   } else if (err.type === "time-out") {
@@ -91,8 +91,8 @@ app.use((err, req, res, next) => {
 
 // ----------------------------------------------------------------------------------------------------
 //                  SWAGGER
-const swaggerJSDoc = require('swagger-jsdoc')
-const swaggerUI = require('swagger-ui-express');
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express");
 
 const options = {
   definition: {
@@ -104,7 +104,10 @@ const options = {
     },
     servers: [
       {
-        url: "https://ig-server-ef9r.onrender.com/",
+        url: [
+          "http://localhost:5173/",
+          "https://inspiringgo-backend.onrender.com/",
+        ],
       },
     ],
     components: {
@@ -121,7 +124,7 @@ const options = {
   apis: ["./routes/*.js", "./server.js"],
 };
 
-const swaggerspec = swaggerJSDoc(options)
-app.use('/api-docs',swaggerUI.serve, swaggerUI.setup(swaggerspec))
+const swaggerspec = swaggerJSDoc(options);
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerspec));
 // ----------------------------------------------------------------------------------------------------
 start();
